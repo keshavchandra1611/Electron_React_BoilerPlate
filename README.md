@@ -7,6 +7,7 @@
 
 > ELECTRON REACT JS BOILER PLATE  
 > Tailwind Integration  
-> Removed Unused Worflows
+> Removed Unused Worflows   
+> Clean Preload.ts | Defined types explicitly
 
 ---
