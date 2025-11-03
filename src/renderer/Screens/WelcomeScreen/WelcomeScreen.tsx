@@ -27,12 +27,20 @@ const WelcomeScreen = () => {
       </p>
 
       {/* Button */}
-      <button
-        onClick={() => goTo(RouteName.Home)}
-        className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
-      >
-        Go to Home
-      </button>
+      <div className='flex justify-center items-center gap-2'>
+        <button
+          onClick={() => goTo(RouteName.Home)}
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
+        >
+          Go to Home
+        </button>
+        <button
+          onClick={() => goTo(RouteName.ElectronStore)}
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
+        >
+          Go to Check Electron Store
+        </button>
+      </div>
     </div>
   );
 };
