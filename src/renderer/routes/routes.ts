@@ -4,18 +4,21 @@ import { useNavigate } from 'react-router-dom';
 export enum RouteName {
   WelcomeScreen = 'WelcomeScreen',
   Home = 'Home',
+  ElectronStore = 'ElectronStore',
 }
 
 /* Route parameters (if any route needs dynamic params) */
 export type AppRouteParams = {
   [RouteName.WelcomeScreen]: undefined;
   [RouteName.Home]: undefined;
+  [RouteName.ElectronStore]: undefined;
 };
 
 /* Actual paths for each route */
 export const AppRoutes: Record<RouteName, string> = {
   [RouteName.WelcomeScreen]: '/',
   [RouteName.Home]: '/home',
+  [RouteName.ElectronStore]: '/electronstore',
 };
 
 /**

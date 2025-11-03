@@ -1,35 +1,21 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-
-export type Channels = 'ipc-example';
+import { contextBridge } from 'electron';
+import {
+  ElectronStoreBridge,
+  ElectronStoreHandler,
+} from './Dependencies/ElectronStore/ElectronStorePreload';
+import {
+  ipcRendererBridge,
+  ipcRendererHandler,
+} from './Dependencies/ipc/ipcPreload';
 
 const electronHandler: {
-  ipcRenderer: {
-    sendMessage(channel: Channels, ...args: unknown[]): void;
-    on(channel: Channels, func: (...args: unknown[]) => void): () => void;
-    once(channel: Channels, func: (...args: unknown[]) => void): void;
-    invoke(channel: Channels, ...args: unknown[]): Promise<unknown>;
-  };
+  ipcRenderer: ipcRendererHandler;
+  electronStore: ElectronStoreHandler;
 } = {
-  ipcRenderer: {
-    sendMessage(channel, ...args) {
-      ipcRenderer.send(channel, ...args);
-    },
-    on(channel, func) {
-      const subscription = (_event: IpcRendererEvent, ...args: unknown[]) => func(...args);
-      ipcRenderer.on(channel, subscription);
-      return () => {
-        ipcRenderer.removeListener(channel, subscription);
-      };
-    },
-    once(channel, func) {
-      ipcRenderer.once(channel, (_event, ...args) => func(...args));
-    },
-    async invoke(channel, ...args) {
-      return ipcRenderer.invoke(channel, ...args);
-    },
-  },
+  ipcRenderer: ipcRendererBridge,
+  electronStore: ElectronStoreBridge,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);

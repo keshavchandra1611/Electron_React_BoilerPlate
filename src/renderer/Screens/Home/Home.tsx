@@ -11,6 +11,7 @@ const Home = () => {
 
       {/* Content Box */}
       <div className="border-2 border-black p-16 rounded-xl shadow-md bg-white mb-8">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-8">Tailwind CSS Example</h1>
         <p className="text-lg text-gray-700">Hello, I have a black border!</p>
       </div>
 
@@ -19,7 +20,7 @@ const Home = () => {
         onClick={goBack}
         className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
       >
-        Go Back
+        Go To Welcome Screen
       </button>
     </div>
   );
