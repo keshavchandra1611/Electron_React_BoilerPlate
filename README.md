@@ -7,5 +7,6 @@
 
 > ELECTRON REACT JS BOILER PLATE  
 > Tailwind Integration  
+> Removed Unused Worflows
 
 ---
