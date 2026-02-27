@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-boilerplate",
-  "description": "A foundation for scalable desktop apps",
+  "name": "my-electron-app",
+  "description": "My Electron App",
   "keywords": [
     "electron",
     "boilerplate",
@@ -12,20 +12,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
-  "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
-  },
   "license": "MIT",
-  "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
-  },
   "contributors": [],
   "main": "./.erb/dll/main.bundle.dev.js",
   "scripts": {
@@ -36,7 +23,6 @@
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never && npm run build:dll",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "prestart": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack --config ./.erb/configs/webpack.config.main.dev.ts",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run prestart && npm run start:renderer",
@@ -44,7 +30,22 @@
     "start:main": "concurrently -k -P \"cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --watch --config ./.erb/configs/webpack.config.main.dev.ts\" \"electronmon . -- {@}\" --",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true NODE_OPTIONS=\"-r ts-node/register --no-warnings\" webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
-    "test": "jest"
+    "test": "jest",
+    "clean:builds": "npm run echo:CleaningBuidlFolder && npm run delay --silent --sec=2 && ts-node ./.erb/scripts/clean.js dist",
+    "echo:CleaningBuidlFolder": "echo \"\\n\\n\\033[1;33mBuild Folder\\033[0m \\033[32mCleaning...\\033[0m\\n\\n\"",
+    "package:mac": "npm run greenEcho --message=\"Now Building For: Mac\" && npm run package:dependenciesToggle -- --mac && npm run build && electron-builder build --publish never && npm run build:dll",
+    "package:win": "npm run greenEcho --message=\"Now Building For: Windows\" &&  npm run package:dependenciesToggle -- --win && npm run build && electron-builder build --win --x64 --publish never && npm run build:dll",
+    "package:all": "npm run greenEcho --message=\"Starting building for Win and Mac\" && npm run clean:builds && npm run update-app-version && npm run package:win && npm run package:mac && npm run CopyNeededBuilds",
+    "package:dependenciesToggle": "ts-node src/utils/Version/ConfigChanger/addDepAccordingly.ts",
+    "update-app-version": "npm run greenEcho --message=\"Assigning Latest Version of Application\" && npm run delay --silent --sec=2 && ts-node src/utils/Version/ConfigChanger/update-app-version.ts",
+    "CopyNeededBuilds": "rm -rf release/MyBuilds/selected-builds && ts-node release/MyBuilds/selectBuilds.ts",
+    "installFresh": "rm -rf release/app/node_modules release/app/package-lock.json package-lock.json node_modules && npm i",
+    "greenEcho": "echo \"\\033[32m$npm_config_message\\033[0m\\n\" && npm run delay --silent --sec=2",
+    "delay": "node -e \"const sec=parseInt(process.env.npm_config_sec)||2; const wait=ms=>new Promise(r=>setTimeout(r,ms)); wait(sec*1000).then(()=>{});\"",
+    "clear:Cache": "rm -rf ~/Library/Caches/electron && npm cache clean --force && rm -rf ~/Library/Caches/electron-builder && rm -rf ~/.cache/electron-builder",
+    "package:winPush": "node -r dotenv/config ./node_modules/.bin/electron-builder build --win --x64 --publish always",
+    "package:macPush": "node -r dotenv/config ./node_modules/.bin/electron-builder build --mac --x64 --arm64 --publish always",
+    "package:pushOneByOne": "npm run package:all && npm run package:winPush && npm run package:macPush"
   },
   "browserslist": [
     "extends browserslist-config-erb"
@@ -98,9 +99,11 @@
   "dependencies": {
     "@electron/notarize": "^3.0.0",
     "electron-debug": "^4.1.0",
+    "electron-dl": "^4.0.0",
     "electron-log": "^5.3.2",
     "electron-store": "8.2.0",
     "electron-updater": "^6.3.9",
+    "moment-timezone": "^0.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
@@ -130,6 +133,8 @@
     "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.2",
     "detect-port": "^2.1.0",
+    "dotenv": "^17.2.3",
+    "dotenv-webpack": "^8.1.1",
     "electron": "^35.0.2",
     "electron-builder": "^25.1.8",
     "electron-devtools-installer": "^4.0.0",
@@ -176,8 +181,8 @@
     "webpack-merge": "^6.0.1"
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "My Electron App",
+    "appId": "co.keshavorg.myelectron",
     "asar": true,
     "afterSign": ".erb/scripts/notarize.js",
     "asarUnpack": "**\\*.{node,dll}",
@@ -187,6 +192,7 @@
       "package.json"
     ],
     "mac": {
+      "identity": null,
       "notarize": false,
       "target": {
         "target": "default",
@@ -236,12 +242,9 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "keshavchandra1611",
+      "repo": "Electron_React_BoilerPlate"
     }
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "devEngines": {
     "runtime": {
@@ -262,5 +265,10 @@
       ".erb/dll/**"
     ],
     "logLevel": "quiet"
+  },
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keshavchandra1611/Electron_React_BoilerPlate.git"
   }
 }

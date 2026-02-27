@@ -1,2 +1,4 @@
-import '../Dependencies/ipc/ipcMain'
-import '../Dependencies/ElectronStore/ElectronStoreMain'
+import '../Dependencies/ipc/ipc.main'
+import '../Dependencies/ElectronStore/ElectronStore.main'
+import '../Dependencies/env/env.main'
+import '../Dependencies/OTA/OTA.main'

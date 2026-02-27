@@ -15,7 +15,8 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
-import './import/ImportMain'
+import './import/ImportMain';
+import { initOTAUpdater } from './Dependencies/OTA/OTA.main';
 
 class AppUpdater {
   constructor() {
@@ -131,3 +132,12 @@ app
     });
   })
   .catch(console.log);
+
+function initOTAMains() {
+  if (mainWindow) {
+    initOTAUpdater(mainWindow);
+  } else {
+    setTimeout(initOTAMains, 1000);
+  }
+}
+initOTAMains();

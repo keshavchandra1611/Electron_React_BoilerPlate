@@ -7,6 +7,7 @@ const WelcomeScreen = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-500 text-center">
+      <h1 className="text-4xl font-semibold text-white mb-8">Welcome</h1>
       {/* App Icon */}
       <img
         width="160"
@@ -27,7 +28,7 @@ const WelcomeScreen = () => {
       </p>
 
       {/* Button */}
-      <div className='flex justify-center items-center gap-2'>
+      <div className="flex justify-center items-center gap-2">
         <button
           onClick={() => goTo(RouteName.Home)}
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
@@ -39,6 +40,12 @@ const WelcomeScreen = () => {
           className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
         >
           Go to Check Electron Store
+        </button>
+        <button
+          onClick={() => goTo(RouteName.OverTheAirUpdates)}
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
+        >
+          Go to Check OTA Updates
         </button>
       </div>
     </div>

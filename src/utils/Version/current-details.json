@@ -1,0 +1,9 @@
+{
+  "appKey": "MyElectronApp",
+  "name": "my-electron-app",
+  "productName": "My Electron App",
+  "appId": "co.keshavorg.myelectron",
+  "version": "1.0.0",
+  "description": "OTA Enabled!",
+  "timestamp": "20260213_1338"
+}

@@ -1,5 +1,14 @@
-# ⚠️ Node.js Version Requirement
+# 💻 Electron + React Boilerplate
 
+```bash
+███████╗██╗     ███████╗ ██████╗████████╗██████╗  ██████╗ ███╗   ██╗
+██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔═══██╗████╗  ██║
+█████╗  ██║     █████╗  ██║        ██║   ██████╔╝██║   ██║██╔██╗ ██║
+██╔══╝  ██║     ██╔══╝  ██║        ██║   ██╔══██╗██║   ██║██║╚██╗██║
+███████╗███████╗███████╗╚██████╗   ██║   ██║  ██║╚██████╔╝██║ ╚████║
+╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+```
+### ⚠️ Node.js Version Requirement
 <!-- > Before we start: This frontend SDK requires **Node.js 18** to work correctly.   -->
 > Please ensure you are using Node 22 (V22.13.1) before running or building the Electron renderer.
 
@@ -10,5 +19,13 @@
 - ⚡ **Electron + React JS Boilerplate** (clean, ready to extend)
 - 🎨 **TailwindCSS Integration** for modern styling
 - 🧹 **Removed unused workflows** and redundant setup files
-- 🧠 **Clean `preload.ts`** with explicitly defined TypeScript types
+- 🧠 **Cleaned `preload.ts`** with explicitly defined TypeScript types
 - 💾 **Electron Store Implementation** for persistent local storage
+- 🔄 **OTA Updates Implemented (with dotenv setup)** for sending, downloading and installing updates
+    - 💡 Note: Use these env content. 
+        ```bash  
+        API_BASE_URL = " <YOUR API BASE URL (test url) HERE>"  
+        GH_TOKEN = " <YOUR GITHUB PUBLIC TOKEN HERE> "  
+        PackagePushRepo  = "keshavchandra1611/Electron_React_BoilerPlate"
+        ```
+

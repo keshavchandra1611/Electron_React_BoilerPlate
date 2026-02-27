@@ -7,8 +7,10 @@ import {
   deleteWithKey,
   getAllStorage,
 } from '../../utils/Communication/ElectronStore/ElectronStoreUtil';
+import { useTypedNavigation } from '../../routes/routes';
 
 export default function ElectronStoreDemo() {
+  const { goBack } = useTypedNavigation();
   const [key, setKey] = useState('');
   const [value, setValue] = useState('');
   const [storeData, setStoreData] = useState<Record<string, any>>({});
@@ -65,7 +67,7 @@ export default function ElectronStoreDemo() {
 
     // 🗂️ Save the entire DEFAULTS array under a single key called "test"
     // This allows you to later retrieve the whole set at once if needed
-    setWithKey('test', DEFAULTS);
+    setWithKey('JSON_DEMO', DEFAULTS);
 
     toast.info('📦 Demo data added!');
 
@@ -167,6 +169,16 @@ export default function ElectronStoreDemo() {
       <p className="mt-6 text-xs text-gray-400 italic">
         Demo Version — Electron Store Playground
       </p>
+
+      {/* Button */}
+      <div className="flex justify-center items-center gap-2 m-4">
+        <button
+          onClick={goBack}
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
+        >
+          Go Back to Welcome Screen
+        </button>
+      </div>
     </div>
   );
 }

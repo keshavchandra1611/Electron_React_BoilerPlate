@@ -5,6 +5,7 @@ export enum RouteName {
   WelcomeScreen = 'WelcomeScreen',
   Home = 'Home',
   ElectronStore = 'ElectronStore',
+  OverTheAirUpdates = 'OverTheAirUpdates',
 }
 
 /* Route parameters (if any route needs dynamic params) */
@@ -12,6 +13,7 @@ export type AppRouteParams = {
   [RouteName.WelcomeScreen]: undefined;
   [RouteName.Home]: undefined;
   [RouteName.ElectronStore]: undefined;
+  [RouteName.OverTheAirUpdates]: undefined;
 };
 
 /* Actual paths for each route */
@@ -19,6 +21,7 @@ export const AppRoutes: Record<RouteName, string> = {
   [RouteName.WelcomeScreen]: '/',
   [RouteName.Home]: '/home',
   [RouteName.ElectronStore]: '/electronstore',
+  [RouteName.OverTheAirUpdates]: '/overtheairupdates',
 };
 
 /**
