@@ -18,6 +18,15 @@ import { resolveHtmlPath } from './util';
 import './import/ImportMain';
 import { initOTAUpdater } from './Dependencies/OTA/OTA.main';
 
+import dotenv from 'dotenv';
+const envPath = app.isPackaged
+  ? path.join(process.resourcesPath, '.env')
+  : path.resolve(__dirname, '../../.env');
+
+dotenv.config({
+  path: envPath,
+});
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

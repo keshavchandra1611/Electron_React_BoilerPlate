@@ -39,7 +39,7 @@
     "package:dependenciesToggle": "ts-node src/utils/Version/ConfigChanger/addDepAccordingly.ts",
     "update-app-version": "npm run greenEcho --message=\"Assigning Latest Version of Application\" && npm run delay --silent --sec=2 && ts-node src/utils/Version/ConfigChanger/update-app-version.ts",
     "CopyNeededBuilds": "rm -rf release/MyBuilds/selected-builds && ts-node release/MyBuilds/selectBuilds.ts",
-    "installFresh": "rm -rf release/app/node_modules release/app/package-lock.json package-lock.json node_modules && npm i",
+    "installFresh": "node src/utils/Version/ConfigChanger/clear.js && npm run clear:Cache && rm -rf release/app/node_modules release/app/package-lock.json package-lock.json node_modules && npm i",
     "greenEcho": "echo \"\\033[32m$npm_config_message\\033[0m\\n\" && npm run delay --silent --sec=2",
     "delay": "node -e \"const sec=parseInt(process.env.npm_config_sec)||2; const wait=ms=>new Promise(r=>setTimeout(r,ms)); wait(sec*1000).then(()=>{});\"",
     "clear:Cache": "rm -rf ~/Library/Caches/electron && npm cache clean --force && rm -rf ~/Library/Caches/electron-builder && rm -rf ~/.cache/electron-builder",
@@ -238,7 +238,11 @@
       "output": "release/build"
     },
     "extraResources": [
-      "./assets/**"
+      "./assets/**",
+      {
+        "from": ".env",
+        "to": ".env"
+      }
     ],
     "publish": {
       "provider": "github",

@@ -17,10 +17,7 @@ export default function OverTheAirUpdates() {
   const [releases, setReleases] = useState<Release[]>([]);
 
   useEffect(() => {
-    const demoEnvConst = window.electron.env.get('API_BASE_URL');
-    console.log(
-      `\x1b[1;33m🐹 demoEnvConst:\x1b[0m \x1b[0;35m${demoEnvConst}\x1b[0m`,
-    );
+    console.log(`\x1b[1;33m🐹 window.electron.env.get('API_BASE_URL'):\x1b[0m \x1b[0;35m${window.electron.env.get('API_BASE_URL')}\x1b[0m`,);
 
     window.electron.OverTheAirUpdates.onDownloadProgress((prog) => {
       // setProgress(prog.percent ? Number(prog.percent.toFixed(1)) : 0);

@@ -29,6 +29,6 @@ npm-debug.log.*
 *.scss.d.ts
 
 *.env
-release/MyBuilds
+release/MyBuilds/selected-builds/*
 *.exe
 *.dmg
