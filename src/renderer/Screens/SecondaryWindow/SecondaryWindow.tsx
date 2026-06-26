@@ -17,11 +17,60 @@ const SecondaryWindow = () => {
     moved: boolean;
   } | null>(null);
 
+  // The overlay is its own clicker client. The single-owner lock lives in the
+  // main process: if another window already owns the receiver, our open() comes
+  // back as an error instead of stealing the connection.
+  const [isConnected, setIsConnected] = useState(false);
+  const [receiverId, setReceiverId] = useState<string | null>(null);
+  const [lastData, setLastData] = useState<any>(null);
+  const [lastClickerData, setLastClickerData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     // The BrowserWindow is transparent; keep the page background clear so the
     // rounded surface below is the only thing visible.
     document.body.style.background = 'transparent';
   }, []);
+
+  useEffect(() => {
+    window.electron?.clickerSDK.subscribeEvents((data: any) => {
+      if (data.type === 'opened') {
+        setIsConnected(true);
+        setError(null);
+      } else if (data.type === 'closed') {
+        setIsConnected(false);
+        setReceiverId(null);
+        setLastData(null);
+        setLastClickerData(null);
+      } else if (data.type === 'data') {
+        if (data.payload?.clickerId && !data.payload?.receiverId) {
+          setLastClickerData(data.payload);
+        } else {
+          setLastData(data.payload);
+        }
+        // Ignore the placeholder/broadcast receiver id — keep the last real one.
+        const incomingReceiverId = data.payload?.receiverId;
+        if (incomingReceiverId && incomingReceiverId !== 'FE:00:00:00:00:01') {
+          setReceiverId(incomingReceiverId);
+        }
+      } else if (data.type === 'error') {
+        setError(data.payload?.message || 'Unknown error');
+      }
+    });
+    return () => {
+      window.electron?.clickerSDK.unsubscribeEvents();
+      window.electron?.clickerSDK.close();
+    };
+  }, []);
+
+  const toggleConnection = () => {
+    setError(null);
+    if (isConnected) {
+      window.electron?.clickerSDK.close();
+    } else {
+      window.electron?.clickerSDK.open();
+    }
+  };
 
   const handleClose = () => {
     window.electron?.secondaryWindow.close();
@@ -137,10 +186,71 @@ const SecondaryWindow = () => {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 items-center justify-center px-3 pb-3 text-center">
-        <p className="text-sm text-gray-200">
-          Drag me using the grip button. I stay on top of every window. 🚀
-        </p>
+      <div
+        className="flex flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3"
+        style={noDragRegion}
+      >
+        {/* Connect / disconnect — drives the single shared connection */}
+        <button
+          type="button"
+          onClick={toggleConnection}
+          title={
+            isConnected && receiverId
+              ? `Receiver ${receiverId}`
+              : isConnected
+                ? 'Disconnect the receiver'
+                : 'Connect the receiver'
+          }
+          className={`flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold text-white transition-colors ${
+            isConnected
+              ? 'bg-white/10 hover:bg-white/20'
+              : 'bg-sky-500 hover:bg-sky-600'
+          }`}
+        >
+          <span
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: isConnected ? '#4ade80' : '#fda4af' }}
+          />
+          {isConnected
+            ? `Disconnect${receiverId ? ` (${receiverId})` : ''}`
+            : 'Connect'}
+        </button>
+
+        {error && (
+          <p className="rounded-md border border-red-500/40 bg-red-500/15 px-2 py-1.5 text-[11px] font-medium text-red-300">
+            {error}
+          </p>
+        )}
+
+        {!lastData && !lastClickerData && (
+          <p className="px-1 text-center text-[11px] text-gray-400">
+            {isConnected
+              ? 'Waiting for clicker data…'
+              : 'Connect to see clicker data.'}
+          </p>
+        )}
+
+        {lastData && (
+          <div className="rounded-md border border-white/10 bg-black/30 p-2">
+            <h3 className="mb-1 text-[11px] font-semibold text-gray-300">
+              Last Data Received
+            </h3>
+            <pre className="overflow-x-auto whitespace-pre-wrap break-words text-[10px] leading-tight text-green-400">
+              {JSON.stringify(lastData, null, 2)}
+            </pre>
+          </div>
+        )}
+
+        {lastClickerData && (
+          <div className="rounded-md border border-white/10 bg-black/30 p-2">
+            <h3 className="mb-1 text-[11px] font-semibold text-gray-300">
+              Last Data From Clicker
+            </h3>
+            <pre className="overflow-x-auto whitespace-pre-wrap break-words text-[10px] leading-tight text-green-400">
+              {JSON.stringify(lastClickerData, null, 2)}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );

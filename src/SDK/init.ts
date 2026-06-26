@@ -12,6 +12,20 @@ const reconnectionLoopTime = 3000; // in ms 1s=1000ms
 const YouWantToAutoDetectOnceOpened = false;
 const autoTryReconnectOnUnplugged = true;
 
+// ---- Single-owner lock ---------------------------------------------------
+// The receiver has exactly ONE listener. Whichever window connects first owns
+// the connection; serial data flows only to it. A second window (e.g. the
+// Classroom Management screen vs. the overlay) cannot connect until the owner
+// disconnects — it gets an error instead of silently stealing the stream.
+let ownerWebContents: WebContents | null = null;
+
+const isOwnerAlive = (): boolean =>
+  !!ownerWebContents && !ownerWebContents.isDestroyed();
+
+const releaseOwnership = (): void => {
+  ownerWebContents = null;
+};
+
 // Initialize the dongle
 function init() {
   console.log('Initializing SDK');
@@ -50,14 +64,49 @@ function setupSerialPort() {
 
     switch (data.type) {
       case 'open':
+        // Reject only if another live window already holds an OPEN connection.
+        // (Gating on isOpen avoids a failed/zombie attempt falsely locking out
+        // the other window.)
+        if (
+          classKeySerialPort?.isOpen &&
+          isOwnerAlive() &&
+          ownerWebContents !== webContents
+        ) {
+          if (!webContents.isDestroyed()) {
+            webContents.send('serialport', {
+              type: 'error',
+              payload: {
+                message:
+                  'Receiver is already connected on another window. Disconnect it there first.',
+              },
+            });
+          }
+          break;
+        }
+        // Free to connect (or reconnect from the same owner): take ownership.
+        ownerWebContents = webContents;
         handleOpenPort(webContents);
         break;
 
       case 'close':
+        // Only the owner may close the shared connection. A non-owner asking to
+        // close just gets a "closed" ack for its own UI; the owner is untouched.
+        if (isOwnerAlive() && ownerWebContents !== webContents) {
+          if (!webContents.isDestroyed()) {
+            webContents.send('serialport', {
+              type: 'closed',
+              message: 'not the owner',
+            });
+          }
+          break;
+        }
+        releaseOwnership();
         handleClosePort(webContents);
         break;
 
       case 'write':
+        // Only the owner may drive the device.
+        if (isOwnerAlive() && ownerWebContents !== webContents) break;
         handleWritePort(data, webContents);
         break;
 

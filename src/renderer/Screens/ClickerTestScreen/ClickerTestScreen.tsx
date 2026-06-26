@@ -274,7 +274,9 @@ export default function ClickerPage() {
 
   useEffect(() => {
     window.electron.clickerSDK.subscribeEvents((data) => {
-      console.log('Event Data:', data);
+      console.log(
+        `\x1b[1;33m🐹 data:\x1b[0;35m ${JSON.stringify(data, null, 2)}\x1b[0m`,
+      );
 
       if (data.type === 'opened') {
         setIsConnected(true);
@@ -398,7 +400,13 @@ export default function ClickerPage() {
           toast.info(`Attempting to pair Clicker ${clickerId}...`);
         }
       } else if (data.type === 'error') {
-        setLastError(data.payload?.message || 'Unknown error');
+        const message = data.payload?.message || 'Unknown error';
+        setLastError(message);
+        // The single-owner lock rejects a connect attempt when the overlay (or
+        // another window) already owns the receiver — surface that clearly.
+        if (message.includes('already connected on another window')) {
+          toast.error(message);
+        }
         // toast.error('SDK Error: ' + (data.payload?.message || 'Unknown error'));
         setLastData(data.payload);
         setLastClickerData(null);
