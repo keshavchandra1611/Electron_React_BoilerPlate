@@ -1,0 +1,103 @@
+:root {
+  /* 🎨 STYLE SETTINGS */
+  /* --popup-bg: linear-gradient(135deg, #4caf50, #81c784); */
+  /* --popup-color: white; */
+  /* --popup-font-weight: 500; */
+  /* --popup-bg: linear-gradient(135deg, #efdff9, #e6d0f5); */
+  --popup-bg: linear-gradient(135deg, #4caf50, #81c784);
+  --popup-color: black;
+  --popup-font-weight: 700;
+  --popup-padding: 12px 20px;
+  --popup-radius: 25px;
+  --popup-font-size: 13px;
+
+  /* 🧭 POSITION SETTINGS */
+  --popup-bottom: 20px;
+  --popup-x-offset: 0px;
+  --popup-y-offset: 0px;
+
+  /* 🏁 POSITION ANIMATION PATH */
+  --popup-start-offset: -10vh;
+  --popup-rise-offset: -25vh;
+  --popup-end-offset: -25vh;
+
+  /* 🕐 ANIMATION TIMINGS */
+  /* --popup-rise-time: 0.5s;     
+  --popup-visible-time: 0.5s;   
+  --popup-fade-time: 0.5s; */
+
+  /* OPACITY VARIABLES */
+  /* --popup-opacity-start: 0;
+  --popup-opacity-visible: 1;
+  --popup-opacity-end: 0; */
+}
+
+.bubble-popup-container {
+  position: fixed;
+  bottom: var(--popup-bottom);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.bubble-popup {
+  background: var(--popup-bg);
+  color: var(--popup-color);
+  padding: var(--popup-padding);
+  /* border-radius: var(--popup-radius); */
+  font-size: var(--popup-font-size);
+  font-weight: var(--popup-font-weight);
+  opacity: var(--popup-opacity-start);
+
+  /* 🏃‍♂️ SEPARATE ANIMATIONS */
+  animation:
+    bubbleRise calc(var(--popup-rise-time) + var(--popup-visible-time) + var(--popup-fade-time)) ease-in-out forwards,
+    bubbleFade calc(var(--popup-rise-time) + var(--popup-visible-time) + var(--popup-fade-time)) ease-in-out forwards;
+
+  will-change: transform, opacity;
+}
+
+
+/* 🌟 POSITION ANIMATION */
+@keyframes bubbleRise {
+  0% {
+    transform: translate(var(--popup-x-offset), calc(var(--popup-start-offset) + var(--popup-y-offset))) scale(1.2);
+  }
+
+  50% {
+    transform: translate(var(--popup-x-offset), calc(var(--popup-rise-offset) + var(--popup-y-offset))) scale(1.3);
+  }
+
+  100% {
+    transform: translate(var(--popup-x-offset), calc(var(--popup-rise-offset) + var(--popup-y-offset))) scale(1.2);
+  }
+
+  /* 100% {
+    transform: translate(var(--popup-x-offset), calc(var(--popup-end-offset) + var(--popup-y-offset))) scale(0.98);
+  } */
+}
+
+/* 🌟 OPACITY ANIMATION */
+@keyframes bubbleFade {
+  0% {
+    /* opacity: var(--popup-opacity-start); */
+    opacity: 0;
+  }
+
+  30% {
+    /* opacity: var(--popup-opacity-visible); */
+    opacity: 1;
+  }
+
+  60% {
+    /* opacity: var(--popup-opacity-visible); */
+    opacity: 1;
+  }
+
+
+  100% {
+    /* opacity: var(--popup-opacity-end); */
+    opacity: 0;
+  }
+}

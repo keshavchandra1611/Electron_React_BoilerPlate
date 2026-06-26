@@ -47,6 +47,12 @@ const WelcomeScreen = () => {
         >
           Go to Check OTA Updates
         </button>
+        <button
+          onClick={() => goTo(RouteName.ClickerTestScreen)}
+          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-all shadow-md"
+        >
+          Clicker Test
+        </button>
       </div>
     </div>
   );

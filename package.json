@@ -98,6 +98,7 @@
   },
   "dependencies": {
     "@electron/notarize": "^3.0.0",
+    "@serialport/bindings-cpp": "^13.0.1",
     "electron-debug": "^4.1.0",
     "electron-dl": "^4.0.0",
     "electron-log": "^5.3.2",
@@ -107,7 +108,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
-    "react-toastify": "^11.0.5"
+    "react-toastify": "^11.0.5",
+    "serialport": "^13.0.0"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.7.1",
@@ -222,6 +224,15 @@
       ]
     },
     "win": {
+      "extraResources": [
+        {
+          "from": "node_modules/@serialport/bindings-cpp",
+          "to": "../",
+          "filter": [
+            "**/*.node"
+          ]
+        }
+      ],
       "target": [
         "nsis"
       ]

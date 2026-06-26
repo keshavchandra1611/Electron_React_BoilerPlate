@@ -100,6 +100,27 @@ const createWindow = async () => {
     }
   });
 
+  mainWindow.on('close', (event) => {
+    // Prevent immediate close
+    event.preventDefault();
+
+    // Make sure mainWindow is valid
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      // Send an IPC event to renderer to clean up SDK
+      mainWindow.webContents.send('app-closing');
+
+      // Wait some time for cleanup, then destroy the window
+      setTimeout(() => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.destroy(); // actually closes the window
+          mainWindow = null;
+          app.exit(0); // exits app immediately
+          process.exit(0);
+        }
+      }, 1000); // 1.5 seconds to allow renderer cleanup
+    }
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -130,17 +151,34 @@ app.on('window-all-closed', () => {
   }
 });
 
-app
-  .whenReady()
-  .then(() => {
-    createWindow();
-    app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
-    });
-  })
-  .catch(console.log);
+// Prevent multiple instances
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  // Another instance is already running, quit this one
+  app.quit();
+} else {
+  // This handles the case when a second instance is launched
+  app.on('second-instance', (_event, _argv, _workingDirectory) => {
+    // Someone tried to run a second instance, focus the main window
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
+  });
+
+  app
+    .whenReady()
+    .then(() => {
+      createWindow();
+      app.on('activate', () => {
+        // On macOS it's common to re-create a window in the app when the
+        // dock icon is clicked and there are no other windows open.
+        if (mainWindow === null) createWindow();
+      });
+    })
+    .catch(console.log);
+}
 
 function initOTAMains() {
   if (mainWindow) {

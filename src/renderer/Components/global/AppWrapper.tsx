@@ -4,6 +4,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from './Loader';
 import AppVersionInfo from './InfoBadge';
+import { PopupManager } from './BubblePopup/PopupManager';
+
 
 type AppWrapperProps = {
   children: ReactNode;
@@ -44,6 +46,8 @@ const AppWrapper: React.FC<AppWrapperProps> = ({ children }) => {
       )}
 
       <ToastContainer position="bottom-right" />
+      {/* This renders all active popups */}
+      <PopupManager />
     </div>
   );
 };

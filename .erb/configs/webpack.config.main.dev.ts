@@ -28,6 +28,11 @@ const configuration: webpack.Configuration = {
     preload: path.join(webpackPaths.srcMainPath, 'preload.ts'),
   },
 
+  externals: {
+    serialport: 'commonjs serialport',
+    '@serialport/bindings-cpp': 'commonjs @serialport/bindings-cpp',
+  },
+  
   output: {
     path: webpackPaths.dllPath,
     filename: '[name].bundle.dev.js',

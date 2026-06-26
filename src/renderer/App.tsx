@@ -5,6 +5,7 @@ import Home from './Screens/Home/Home';
 import { AppRoutes } from './routes/routes';
 import ElectronStoreDemo from './Screens/ElectronStore/ElectronStore';
 import OverTheAirUpdates from './Screens/OTA/UpdateNotifier';
+import ClickerPage from './Screens/ClickerTestScreen/ClickerTestScreen';
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path={AppRoutes.Home} element={<Home />} />
         <Route path={AppRoutes.ElectronStore} element={<ElectronStoreDemo />} />
         <Route path={AppRoutes.OverTheAirUpdates} element={<OverTheAirUpdates />} />
+        <Route path={AppRoutes.ClickerTestScreen} element={<ClickerPage />} />
       </Routes>
     </Router>
   );
