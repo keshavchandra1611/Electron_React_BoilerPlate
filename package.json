@@ -274,5 +274,14 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/keshavchandra1611/Electron_React_BoilerPlate.git"
+  },
+  "homepage": "https://github.com/keshavchandra1611/Electron_React_BoilerPlate.git#readme",
+  "bugs": {
+    "url": "https://github.com/keshavchandra1611/Electron_React_BoilerPlate/issues"
+  },
+  "author": {
+    "name": "Electron React Boilerplate Maintainer | Keshav Chandra",
+    "email": "keshavchandra1611@gmail.com",
+    "url": "https://github.com/keshavchandra1611"
   }
 }

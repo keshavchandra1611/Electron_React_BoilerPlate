@@ -3,6 +3,7 @@ import App from './App';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AppWrapper from './Components/global/AppWrapper';
+import SecondaryWindow from './Screens/SecondaryWindow/SecondaryWindow';
 
 import config from '../utils/Version/current-details.json'; // adjust relative path
 
@@ -12,17 +13,28 @@ import config from '../utils/Version/current-details.json'; // adjust relative p
 
 
 const container = document.getElementById('root') as HTMLElement;
-document.title = `${config.productName} ${config.version}` || 'Hello Electron!';
 const root = createRoot(container);
-root.render(
-  <AppWrapper>
-    <App />
-  </AppWrapper>,
-);
+// The overlay window loads the same bundle with a `#secondary` hash. Because the
+// app uses MemoryRouter (which ignores the URL), we branch here on the hash to
+// render the standalone overlay UI instead of the main router app.
+const isSecondaryWindow = window.location.hash === '#secondary';
 
-// calling IPC exposed from preload script
-window.electron?.ipcRenderer.once('ipc-example', (arg) => {
-  // eslint-disable-next-line no-console
-  console.log(arg);
-});
-window.electron?.ipcRenderer.sendMessage('ipc-example', ['ping']);
+if (isSecondaryWindow) {
+  document.title = 'Overlay';
+  root.render(<SecondaryWindow />);
+} else {
+  document.title = `${config.productName} ${config.version}` || 'Hello Electron!';
+  root.render
+  (
+    <AppWrapper>
+      <App />
+    </AppWrapper>,
+  );
+
+  // calling IPC exposed from preload script
+  window.electron?.ipcRenderer.once('ipc-example', (arg) => {
+    // eslint-disable-next-line no-console
+    console.log(arg);
+  });
+  window.electron?.ipcRenderer.sendMessage('ipc-example', ['ping']);
+}

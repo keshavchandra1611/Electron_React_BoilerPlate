@@ -11,17 +11,23 @@ import {
 } from './Dependencies/ipc/ipc.preload';
 import { envBridge, EnvHandler } from './Dependencies/env/env.preload';
 import { OTABridge, OTAHandler } from './Dependencies/OTA/OTA.preload';
+import {
+  SecondaryWindowBridge,
+  SecondaryWindowHandler,
+} from './Dependencies/SecondaryWindow/SecondaryWindow.preload';
 
 const electronHandler: {
   ipcRenderer: ipcRendererHandler;
   electronStore: ElectronStoreHandler;
   env: EnvHandler;
   OverTheAirUpdates: OTAHandler;
+  secondaryWindow: SecondaryWindowHandler;
 } = {
   ipcRenderer: ipcRendererBridge,
   electronStore: ElectronStoreBridge,
   env: envBridge,
   OverTheAirUpdates: OTABridge,
+  secondaryWindow: SecondaryWindowBridge,
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
