@@ -12,6 +12,10 @@ import {
 import { envBridge, EnvHandler } from './Dependencies/env/env.preload';
 import { OTABridge, OTAHandler } from './Dependencies/OTA/OTA.preload';
 import {
+  AppInfoBridge,
+  AppInfoHandler,
+} from './Dependencies/AppInfo/AppInfo.preload';
+import {
   SecondaryWindowBridge,
   SecondaryWindowHandler,
 } from './Dependencies/SecondaryWindow/SecondaryWindow.preload';
@@ -21,12 +25,14 @@ const electronHandler: {
   electronStore: ElectronStoreHandler;
   env: EnvHandler;
   OverTheAirUpdates: OTAHandler;
+  appInfo: AppInfoHandler;
   secondaryWindow: SecondaryWindowHandler;
 } = {
   ipcRenderer: ipcRendererBridge,
   electronStore: ElectronStoreBridge,
   env: envBridge,
   OverTheAirUpdates: OTABridge,
+  appInfo: AppInfoBridge,
   secondaryWindow: SecondaryWindowBridge,
 };
 

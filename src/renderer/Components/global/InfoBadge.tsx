@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import currentVersionDetails from './../../../utils/Version/current-details.json';
 
 const AppVersionInfo = () => {
   const [showPopup, setShowPopup] = useState(false);
   const currentAppVersionData = currentVersionDetails ?? '';
+
+  // Real runtime version + name from the Electron app (packaged package.json),
+  // falling back to the static JSON until the IPC calls resolve.
+  const [appVersion, setAppVersion] = useState(currentAppVersionData.version);
+  const [appName, setAppName] = useState(currentAppVersionData.productName);
+  useEffect(() => {
+    window.electron?.appInfo.getVersion().then(setAppVersion);
+    window.electron?.appInfo.getName().then(setAppName);
+  }, []);
 
   return (
     <>
@@ -19,6 +28,10 @@ const AppVersionInfo = () => {
           <span className="font-normal text-xs">
             v{currentAppVersionData.version}
           </span>
+          {/* Real runtime name + version from the Electron app */}
+          {/* <span className="font-normal text-xs opacity-70">
+            ({appName} v{appVersion})
+          </span> */}
           {/* Inline InformationCircle SVG */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -68,6 +81,8 @@ const AppVersionInfo = () => {
             <h3 className="text-xl font-semibold mb-2">
               What's New in v{currentAppVersionData.version}
             </h3>
+            {/* Real runtime version from the Electron app */}
+            {/* <p className="text-gray-500 text-xs mb-2">App version: v{appVersion}</p> */}
             <p className="text-gray-700 whitespace-pre-line">
               {currentAppVersionData.description}
             </p>

@@ -17,6 +17,8 @@ import { resolveHtmlPath } from './util';
 
 import './import/ImportMain';
 import { initOTAUpdater } from './Dependencies/OTA/OTA.main';
+import { cleanupPendingInstaller } from './Dependencies/OTA/func/installer-cleanup';
+
 
 import dotenv from 'dotenv';
 const envPath = app.isPackaged
@@ -133,6 +135,9 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
+    // Delete any update installer left over from a previous update (no-op if
+    // none pending). Runs before the window so cleanup happens early.
+    cleanupPendingInstaller();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

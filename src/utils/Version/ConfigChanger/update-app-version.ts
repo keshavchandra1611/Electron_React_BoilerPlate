@@ -98,6 +98,33 @@ const updatedPackages = filesToUpdate
   .map((filePath) => updatePackageJson(filePath))
   .filter(Boolean) as Record<string, any>[]; // TS type assertion
 
+// ----------------------
+// Update installer.nsh
+// ----------------------
+const installerPath = path.join(
+  __dirname,
+  '../../../..',
+  'assets',
+  'installer.nsh',
+);
+
+if (fs.existsSync(installerPath)) {
+  let installerContent = fs.readFileSync(installerPath, 'utf8');
+
+  installerContent = installerContent.replace(
+    /taskkill\s+\/F\s+\/T\s+\/IM\s+"[^"]+\.exe"/,
+    `taskkill /F /T /IM "${app.productName}.exe"`,
+  );
+
+  fs.writeFileSync(installerPath, installerContent, 'utf8');
+
+  console.log(
+    `\x1b[1;32m✅ Updated installer.nsh\x1b[0m \x1b[0;36m→ ${app.productName}.exe\x1b[0m`,
+  );
+} else {
+  console.warn(`\x1b[1;33m⚠ installer.nsh not found:\x1b[0m ${installerPath}`);
+}
+
 // Export only the changed/current details
 const changedDetails = {
   appKey,
